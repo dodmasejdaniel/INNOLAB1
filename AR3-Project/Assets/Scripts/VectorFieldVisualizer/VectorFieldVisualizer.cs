@@ -20,6 +20,7 @@ public class VectorFieldVisualizer : MonoBehaviour {
                     Vector3 position = new Vector3(x * spacing, y * spacing, z * spacing);
                     Vector3 vector = VectorFieldFunction(position);
                     SpawnArrow(position, vector.normalized * arrowLength);
+                    
                 }
             }
         }

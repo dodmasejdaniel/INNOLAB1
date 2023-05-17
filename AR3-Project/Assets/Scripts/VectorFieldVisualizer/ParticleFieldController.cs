@@ -5,14 +5,16 @@ using UnityEngine;
 public class ParticleFieldController : MonoBehaviour {
     public float particleForce = 1.0f;
 
+    public GameObject ParticlePrefab;
     private ParticleSystem particleSystemV;
     private ParticleSystem.Particle[] particles;
 
     public delegate Vector3 ParticleFieldFunctionDelegate(Vector3 position);
     public event ParticleFieldFunctionDelegate OnCustomParticleFieldFunction;
 
-    private void Start() {
-        particleSystemV = GetComponent<ParticleSystem>();
+    private void Awake() {
+        InitializeIfNeeded();
+        
     }
 
     private void LateUpdate() {
@@ -45,7 +47,10 @@ public class ParticleFieldController : MonoBehaviour {
 
     private void InitializeIfNeeded() {
         if (particleSystemV == null) {
-            particleSystemV = GetComponent<ParticleSystem>();
+            GameObject arCam = GameObject.FindGameObjectWithTag("ar_cam");
+            Debug.Log(arCam);
+            GameObject particleSystem = Instantiate(ParticlePrefab, Vector3.zero, Quaternion.identity, arCam.transform);
+            particleSystemV = particleSystem.GetComponent<ParticleSystem>();
         }
 
         if (particles == null || particles.Length < particleSystemV.main.maxParticles) {

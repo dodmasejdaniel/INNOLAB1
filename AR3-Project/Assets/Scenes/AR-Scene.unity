@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 22732921}
   m_Layer: 0
   m_Name: AR Camera
-  m_TagString: Untagged
+  m_TagString: ar_cam
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1220,7 +1220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 788587e994f1943f3856c1c332db429b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AnchorPrefab: {fileID: 9087229690827219294, guid: 0ebf5d306ec19c846a35910e135c940c,
+  m_AnchorPrefab: {fileID: 3411832263983709858, guid: 6ab24bc1245660548ab066cd0b453776,
     type: 3}
 --- !u!114 &388525034
 MonoBehaviour:
@@ -1234,7 +1234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa17d122634046b4a8e23048891fafc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RaycastPrefab: {fileID: 9087229690827219294, guid: 0ebf5d306ec19c846a35910e135c940c,
+  m_RaycastPrefab: {fileID: 3411832263983709858, guid: 6ab24bc1245660548ab066cd0b453776,
     type: 3}
 --- !u!114 &388525035
 MonoBehaviour:
@@ -1248,7 +1248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AnchorPrefab: {fileID: 9087229690827219294, guid: 0ebf5d306ec19c846a35910e135c940c,
+  m_AnchorPrefab: {fileID: 3411832263983709858, guid: 6ab24bc1245660548ab066cd0b453776,
     type: 3}
 --- !u!1 &392183844
 GameObject:
@@ -2539,7 +2539,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1244499906
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3259,7 +3259,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1498544187
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4517,7 +4517,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1913047694
 RectTransform:
   m_ObjectHideFlags: 0
