@@ -5,13 +5,13 @@ public class CustomVectorFieldAndParticleFunction : MonoBehaviour {
     public ParticleFieldController particleFieldController;
 
     private void Start() {
-        vectorFieldVisualizer.OnCustomVectorFieldFunction += TorodialVectorVectorField;
-        particleFieldController.OnCustomParticleFieldFunction += TorodialVectorVectorField;
+        vectorFieldVisualizer.OnCustomVectorFieldFunction += CurlNoiseVectorField;
+        particleFieldController.OnCustomParticleFieldFunction += CurlNoiseVectorField;
     }
 
     private void OnDestroy() {
-        vectorFieldVisualizer.OnCustomVectorFieldFunction -= TorodialVectorVectorField;
-        particleFieldController.OnCustomParticleFieldFunction -= TorodialVectorVectorField;
+        vectorFieldVisualizer.OnCustomVectorFieldFunction -= CurlNoiseVectorField;
+        particleFieldController.OnCustomParticleFieldFunction -= CurlNoiseVectorField;
     }
 
     private Vector3 MyCustomFunction(Vector3 position) {
