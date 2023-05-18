@@ -5,7 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class Navigation : MonoBehaviour
 {
-    public void navigateToMain() {
-        SceneManager.LoadScene("AR-Scene");
+    public void navigateToVectorField() {
+        SceneManager.LoadScene("VF-Scene");
+    }
+
+    public void navigateToVector() {
+        SceneManager.LoadScene("V-Scene");
+    }
+
+    public void navigateToHome() {
+        SceneManager.LoadScene("Home-Scene");
     }
 }

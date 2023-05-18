@@ -5,20 +5,33 @@ using UnityEngine;
 public class ParticleFieldController : MonoBehaviour {
     public float particleForce = 1.0f;
 
-    public GameObject ParticlePrefab;
+    //public GameObject ParticlePrefab;
     private ParticleSystem particleSystemV;
     private ParticleSystem.Particle[] particles;
 
-    public delegate Vector3 ParticleFieldFunctionDelegate(Vector3 position);
-    public event ParticleFieldFunctionDelegate OnCustomParticleFieldFunction;
+    public event Common.VectorFunction OnCustomParticleFieldFunction;
+
+    public void SetCustomVectorFieldFunction(Common.VectorFunction function) {
+        OnCustomParticleFieldFunction = function;
+    }
+
+    private void Start() {
+        if (CustomVectorFieldAndParticleFunction.Instance != null)
+            OnCustomParticleFieldFunction = CustomVectorFieldAndParticleFunction.Instance.currentFunction;
+    }
+
+    private void Update() {
+        if (CustomVectorFieldAndParticleFunction.Instance != null)
+            OnCustomParticleFieldFunction = CustomVectorFieldAndParticleFunction.Instance.currentFunction;
+    }
 
     private void Awake() {
-        InitializeIfNeeded();
-        
+        particleSystemV = gameObject.GetComponent<ParticleSystem>();
+        particles = new ParticleSystem.Particle[particleSystemV.main.maxParticles];
     }
 
     private void LateUpdate() {
-        InitializeIfNeeded();
+        //InitializeIfNeeded();
 
         int numParticlesAlive = particleSystemV.GetParticles(particles);
 
@@ -45,16 +58,24 @@ public class ParticleFieldController : MonoBehaviour {
         );
     }
 
-    private void InitializeIfNeeded() {
-        if (particleSystemV == null) {
-            GameObject arCam = GameObject.FindGameObjectWithTag("ar_cam");
-            Debug.Log(arCam);
-            GameObject particleSystem = Instantiate(ParticlePrefab, Vector3.zero, Quaternion.identity, arCam.transform);
-            particleSystemV = particleSystem.GetComponent<ParticleSystem>();
-        }
-
-        if (particles == null || particles.Length < particleSystemV.main.maxParticles) {
-            particles = new ParticleSystem.Particle[particleSystemV.main.maxParticles];
-        }
+    public void RestartParticleSystem() {
+        //if (particleSystemV != null) {
+            particleSystemV.Clear();
+            particleSystemV.Play();
+        //}
+        
     }
+
+    //private void InitializeIfNeeded() {
+    //    if (particleSystemV == null) {
+    //        GameObject arCam = GameObject.FindGameObjectWithTag("ar_cam");
+    //        Vector3 arPos = new Vector3(arCam.transform.position.x, arCam.transform.position.y - 0.5f, arCam.transform.position.z + 0.5f);
+    //        GameObject particleSystem = Instantiate(ParticlePrefab, arPos, Quaternion.identity, arCam.transform);
+    //        particleSystemV = particleSystem.GetComponent<ParticleSystem>();
+    //    }
+
+    //    if (particles == null || particles.Length < particleSystemV.main.maxParticles) {
+    //        particles = new ParticleSystem.Particle[particleSystemV.main.maxParticles];
+    //    }
+    //}
 }

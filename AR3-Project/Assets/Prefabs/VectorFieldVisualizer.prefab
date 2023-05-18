@@ -10,11 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3411832263983709885}
   - component: {fileID: 3411832263983709886}
-  - component: {fileID: 3411832263983709857}
-  - component: {fileID: 3411832263983709884}
   m_Layer: 0
   m_Name: VectorFieldVisualizer
-  m_TagString: Untagged
+  m_TagString: vector-field-visualizer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47,37 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: 10
-  spacing: 1
   arrowLength: 0.5
   arrowColor: {r: 1, g: 1, b: 1, a: 1}
   arrowPrefab: {fileID: 678677404795466750, guid: c5b32bade49fb6743a4eeb7a0cc24a95,
     type: 3}
---- !u!114 &3411832263983709857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3411832263983709858}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 005ca400f324e8944b0f7750b24d6e56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  particleForce: 1
-  ParticlePrefab: {fileID: 1446548571030413787, guid: d234fef509b00e847a97e846bc0f9ae1,
-    type: 3}
---- !u!114 &3411832263983709884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3411832263983709858}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79ba179f6fd6c9d418f52701d95f33df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vectorFieldVisualizer: {fileID: 3411832263983709886}
-  particleFieldController: {fileID: 3411832263983709857}

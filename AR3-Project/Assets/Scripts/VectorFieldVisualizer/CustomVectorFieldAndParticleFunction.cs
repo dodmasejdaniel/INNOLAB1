@@ -1,18 +1,71 @@
 using UnityEngine;
+using TMPro;
 
 public class CustomVectorFieldAndParticleFunction : MonoBehaviour {
-    public VectorFieldVisualizer vectorFieldVisualizer;
-    public ParticleFieldController particleFieldController;
+    public static CustomVectorFieldAndParticleFunction Instance;
 
-    private void Start() {
-        vectorFieldVisualizer.OnCustomVectorFieldFunction += CircularVectorField;
-        particleFieldController.OnCustomParticleFieldFunction += CircularVectorField;
+    //public VectorFieldVisualizer vectorFieldVisualizer;
+    //public ParticleFieldController particleFieldController;
+    private TMP_Dropdown functionDropdown;
+
+    private enum FunctionType {
+        MyCustomFunction,
+        CircularVectorField,
+        CurlNoiseVectorField,
+        SphericalHarmonicsVectorField,
+        TorodialVectorVectorField
     }
 
-    private void OnDestroy() {
-        vectorFieldVisualizer.OnCustomVectorFieldFunction -= CircularVectorField;
-        particleFieldController.OnCustomParticleFieldFunction -= CircularVectorField;
+    public Common.VectorFunction currentFunction;  // made public so VectorFieldVisualizer and ParticleFieldController can access
+
+    private void Awake() {
+        // Here we handle the singleton pattern
+        if (Instance == null) {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        } else {
+            Destroy(gameObject);
+        }
+
+        functionDropdown = GameObject.FindGameObjectWithTag("dropdown").GetComponent<TMP_Dropdown>();
+
+        functionDropdown.onValueChanged.AddListener(delegate { DropdownValueChanged(functionDropdown); });
+        DropdownValueChanged(functionDropdown);
     }
+
+    private void DropdownValueChanged(TMP_Dropdown change) {
+        FunctionType functionType = (FunctionType)change.value;
+
+        switch (functionType) {
+            case FunctionType.MyCustomFunction:
+                currentFunction = MyCustomFunction;
+                break;
+            case FunctionType.CircularVectorField:
+                currentFunction = CircularVectorField;
+                break;
+            case FunctionType.CurlNoiseVectorField:
+                currentFunction = CurlNoiseVectorField;
+                break;
+            case FunctionType.SphericalHarmonicsVectorField:
+                currentFunction = SphericalHarmonicsVectorField;
+                break;
+            case FunctionType.TorodialVectorVectorField:
+                currentFunction = TorodialVectorVectorField;
+                break;
+        }
+
+        GameObject visualizer = GameObject.FindGameObjectWithTag("vector-field-visualizer");
+        if (visualizer != null) {
+            visualizer.GetComponent<VectorFieldVisualizer>().ResetVectorField(currentFunction);
+        }
+
+        // Check if the vectorFieldVisualizer and particleFieldController exist and set their function
+        //if (vectorFieldVisualizer)
+        //    vectorFieldVisualizer.SetCustomVectorFieldFunction(currentFunction);
+        //if (particleFieldController)
+        //    particleFieldController.SetCustomVectorFieldFunction(currentFunction);
+    }
+
 
     private Vector3 MyCustomFunction(Vector3 position) {
         

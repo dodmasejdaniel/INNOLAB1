@@ -17,6 +17,7 @@ public class AnchorCreator : MonoBehaviour
     // This is the prefab that will appear every time an anchor is created.
     [SerializeField]
     GameObject m_AnchorPrefab;
+    GameObject anchorInstance;
 
     public GameObject AnchorPrefab
     {
@@ -34,7 +35,7 @@ public class AnchorCreator : MonoBehaviour
         m_AnchorPoints.Clear();
     }
 
-    // On Awake(), we obtains a reference to all the required components.
+    // On Awake(), we obtain a reference to all the required components.
     // The ARRaycastManager allows us to perform raycasts so that we know where to place an anchor.
     // The ARPlaneManager detects surfaces we can place our objects on.
     // The ARAnchorManager handles the processing of all anchors and updates their position and rotation.
@@ -52,6 +53,10 @@ public class AnchorCreator : MonoBehaviour
         if (Input.touchCount == 0)
             return;
 
+        // If a instance was already made, do nothing.
+        if (anchorInstance != null) {
+            return;
+        }
         var touch = Input.GetTouch(0);
         if (touch.phase != TouchPhase.Began)
             return;
@@ -69,7 +74,7 @@ public class AnchorCreator : MonoBehaviour
             // This prefab instance is parented to the anchor to make sure the position of the prefab is consistent
             // with the anchor, since an anchor attached to an ARPlane will be updated automatically by the ARAnchorManager as the ARPlane's exact position is refined.
             var anchor = m_AnchorManager.AttachAnchor(hitPlane, hitPose);
-            Instantiate(m_AnchorPrefab, anchor.transform);
+            anchorInstance = Instantiate(m_AnchorPrefab, anchor.transform);
 
             if (anchor == null)
             {

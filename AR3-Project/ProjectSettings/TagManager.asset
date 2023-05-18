@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - ar_cam
+  - vector-field-parent
+  - particle-system
+  - particle-system-parent
+  - vector-field-visualizer
+  - dropdown
   layers:
   - Default
   - TransparentFX
