@@ -47,5 +47,5 @@ MonoBehaviour:
   gridSize: 10
   arrowLength: 0.5
   arrowColor: {r: 1, g: 1, b: 1, a: 1}
-  arrowPrefab: {fileID: 678677404795466750, guid: c5b32bade49fb6743a4eeb7a0cc24a95,
+  arrowPrefab: {fileID: 8640466500781081392, guid: 6f62a37c8e926fe4daa5924068e3dcb9,
     type: 3}

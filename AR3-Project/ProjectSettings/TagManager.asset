@@ -11,6 +11,8 @@ TagManager:
   - vector-field-visualizer
   - dropdown
   - anchor-parent
+  - coord-system
+  - arrow
   layers:
   - Default
   - TransparentFX

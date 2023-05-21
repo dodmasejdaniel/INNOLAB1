@@ -77,7 +77,7 @@ public class AnchorCreator : MonoBehaviour
             // This prefab instance is parented to the anchor to make sure the position of the prefab is consistent
             // with the anchor, since an anchor attached to an ARPlane will be updated automatically by the ARAnchorManager as the ARPlane's exact position is refined.
             var anchor = m_AnchorManager.AttachAnchor(hitPlane, hitPose);
-            anchorInstance = Instantiate(m_AnchorPrefab, anchorParent.transform);
+            anchorInstance = Instantiate(m_AnchorPrefab, anchor.transform);
 
             if (anchor == null)
             {

@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 6951997419534491309}
   m_Layer: 0
   m_Name: KoordSys
-  m_TagString: Untagged
+  m_TagString: coord-system
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

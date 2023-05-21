@@ -9,11 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/Home-Scene.unity
     guid: 059230846124a5945b81fb39000ca00c
   - enabled: 1
-    path: Assets/Scenes/VF-Scene.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
     path: Assets/Scenes/V-Scene.unity
     guid: 710b6b2afd912bf4f8e19715b86ebad7
+  - enabled: 1
+    path: Assets/Scenes/Pre-VF.unity
+    guid: 8ab266d6e794d4f4891c864a8fff24f4
+  - enabled: 1
+    path: Assets/Scenes/VF-Scene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects:
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 744b813df90924c169af73489b8325de,
       type: 2}

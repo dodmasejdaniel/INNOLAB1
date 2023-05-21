@@ -3308,7 +3308,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1153568858}
         m_TargetAssemblyTypeName: Navigation, Assembly-CSharp
-        m_MethodName: navigateToVectorField
+        m_MethodName: navigateToPreVF
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

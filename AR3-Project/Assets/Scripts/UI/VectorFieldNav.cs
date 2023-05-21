@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class VectorFieldNav : MonoBehaviour
 {
@@ -39,6 +40,7 @@ public class VectorFieldNav : MonoBehaviour
     }
 
     public void DestroyVisualizer() {
+
         GameObject VectorFieldParent = GameObject.FindGameObjectWithTag("vector-field-parent");
         if (VectorFieldParent == null) {
             Debug.LogError("Parent not found");

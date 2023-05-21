@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class Navigation : MonoBehaviour
 {
+    public void navigateToPreVF() {
+        SceneManager.LoadScene("Pre-VF");
+    }
     public void navigateToVectorField() {
         SceneManager.LoadScene("VF-Scene");
     }
