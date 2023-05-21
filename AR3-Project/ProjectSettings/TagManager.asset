@@ -10,6 +10,7 @@ TagManager:
   - particle-system-parent
   - vector-field-visualizer
   - dropdown
+  - anchor-parent
   layers:
   - Default
   - TransparentFX
