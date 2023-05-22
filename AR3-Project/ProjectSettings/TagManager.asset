@@ -13,6 +13,7 @@ TagManager:
   - anchor-parent
   - coord-system
   - arrow
+  - canvas
   layers:
   - Default
   - TransparentFX

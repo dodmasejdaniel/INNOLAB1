@@ -20,6 +20,8 @@ public class AnchorCreator : MonoBehaviour
     GameObject anchorInstance;
     GameObject anchorParent;
 
+    public float scale = 1f;
+
     public GameObject AnchorPrefab
     {
         get => m_AnchorPrefab;
@@ -77,7 +79,8 @@ public class AnchorCreator : MonoBehaviour
             // This prefab instance is parented to the anchor to make sure the position of the prefab is consistent
             // with the anchor, since an anchor attached to an ARPlane will be updated automatically by the ARAnchorManager as the ARPlane's exact position is refined.
             var anchor = m_AnchorManager.AttachAnchor(hitPlane, hitPose);
-            anchorInstance = Instantiate(m_AnchorPrefab, anchor.transform);
+            anchorInstance = Instantiate(m_AnchorPrefab, anchor.transform.position, Quaternion.identity, anchor.transform);
+            anchorInstance.transform.localScale *= 5.0f;
 
             if (anchor == null)
             {
