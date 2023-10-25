@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class CartesianMenu : MonoBehaviour {
+public class PolarMenu : MonoBehaviour {
     [SerializeField] private TMP_InputField inputX;
     [SerializeField] private TMP_InputField inputY;
     [SerializeField] private TMP_InputField inputZ;
@@ -32,7 +32,7 @@ public class CartesianMenu : MonoBehaviour {
         //coordSystem = GameObject.FindGameObjectWithTag("coord-system");
         canvas = GameObject.FindGameObjectWithTag("canvas");
         //arrowInstance = canvas.GetComponent<VectorNav>().getIsArrowB() ? canvas.GetComponent<VectorNav>().getArrowB() : canvas.GetComponent<VectorNav>().getArrowA();
-        Debug.Log("Start");
+
     }
 
     private void OnEnable() {
@@ -59,7 +59,6 @@ public class CartesianMenu : MonoBehaviour {
             Debug.Log("No arrow instance found.");
         }
     }
-
 
     private void OnChangeInputAxis(string value, char axis) {
         //float floatVal = Mathf.Clamp( ConvertToFloat(value), -5.0f, 5.0f);
@@ -131,33 +130,51 @@ public class CartesianMenu : MonoBehaviour {
 
     void ChangeArrow() {
         GameObject arrowInstance = canvas.GetComponent<VectorNav>().getActualArrow();
-        Vector3 targetPosition = vector;
-        Vector3 arrowStartPosition = new Vector3(0, 0, 0);
 
-        // Direction vector from start to target
-        Vector3 direction = targetPosition - arrowStartPosition;
+        // Convert spherical (r, theta, phi) to Cartesian (x, y, z)
+        float r = vector.x;  // Radius
+        float phi = Mathf.Deg2Rad * vector.y;  // Convert degrees to radians for polar-angle
+        float theta = Mathf.Deg2Rad * vector.z;  // Convert degrees to radians for azimuthal-angle
 
-        // Adjust the rotation of the arrow to look at the target
+        // Cartesian coordinates
+        Vector3 direction = new Vector3(
+            r * Mathf.Sin(phi) * Mathf.Cos(theta),
+            r * Mathf.Sin(phi) * Mathf.Sin(theta),
+            r * Mathf.Cos(phi)
+        );
+
         Quaternion rotation = Quaternion.LookRotation(direction);
-        arrowInstance.transform.rotation = rotation;
 
-        // Adjust the scale to match the distance (you might need to adjust the scaling factor)
-        float distance = Vector3.Distance(arrowStartPosition, targetPosition);
-        arrowInstance.transform.localScale = new Vector3(1, 1, distance);
+        // Hardcoded -90 degree rotation on the x-axis for unitys coordinate-system correction
+        Quaternion xRotation = Quaternion.Euler(-90, 0, 0);
+
+        arrowInstance.transform.rotation = xRotation * rotation;
+
+        arrowInstance.transform.localScale = new Vector3(1, 1, r);
     }
 
     Vector3 GetTargetPosition() {
         GameObject arrowInstance = canvas.GetComponent<VectorNav>().getActualArrow();
-        Quaternion rotation = arrowInstance.transform.rotation;
-        float distance = arrowInstance.transform.localScale.z;  // Assuming the distance is stored in the z component of localScale
 
-        // Calculate the direction vector based on rotation
-        Vector3 direction = rotation * Vector3.forward;
+        // Get r from local scale
+        float r = arrowInstance.transform.localScale.z;
 
-        // Find the target position by scaling the direction vector
-        Vector3 targetPosition = direction * distance;
+        // Get the direction from the rotation
+        Vector3 direction = arrowInstance.transform.rotation * Vector3.forward;
 
-        return targetPosition;
+        // Correct for the -90 degree rotation on the x-axis
+        Quaternion xInverseRotation = Quaternion.Euler(90, 0, 0);
+        direction = xInverseRotation * direction;
+
+        // Convert to spherical coordinates
+        float phi = Mathf.Acos(direction.z / r); // polar angle in radians
+        float theta = Mathf.Atan2(direction.y, direction.x); // azimuthal angle in radians
+
+        // Convert to degrees
+        phi = Mathf.Rad2Deg * phi;
+        theta = Mathf.Rad2Deg * theta;
+
+        return new Vector3(r, phi, theta);
     }
 
 
