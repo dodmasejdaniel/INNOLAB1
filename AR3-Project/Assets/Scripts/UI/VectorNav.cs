@@ -25,130 +25,132 @@ public class VectorNav : MonoBehaviour
     public TMP_Text menuText;
 
     private Mode selectedMenu = Mode.POLAR;
-    private String[] menuNames = { "Kartesisch", "Polar" };
+    private readonly String[] menuNames = { "Kartesisch", "Polar" };
 
-    public GameObject VectorImage;
-    public TMP_Text VectorText;
+    public GameObject vectorImage;
+    public TMP_Text vectorText;
 
     private bool isInputToggled = false;
     private bool isArrowB = false;
 
-    public bool getIsArrowB() => isArrowB;
-    public void setIsArrowB(bool val) => isArrowB = val;
+    public bool GetIsArrowB() => isArrowB;
 
-    public GameObject getArrowA() => arrowInstanceA;
-    public GameObject getArrowB() => arrowInstanceB;
+    public GameObject GetActualArrow() => isArrowB ? arrowInstanceB : arrowInstanceA;
 
-    public GameObject getActualArrow() => isArrowB ? arrowInstanceB : arrowInstanceA;
+    private readonly int totalEnumValues = Enum.GetNames(typeof(Mode)).Length;
 
-    private Vector3 vector = Vector3.zero; // The current vector
+    // BUTTONCLICK: Vector A button is clicked
+    public void HandleVecAButtonClick() {
+        HandleVectorButton(false, AClick);
+    }
 
-    int totalEnumValues = Enum.GetNames(typeof(Mode)).Length;
+    // BUTTONCLICK: Vector B button is clicked
+    public void HandleVecBButtonClick() {
+        HandleVectorButton(true, BClick);
+    }
 
-
-    public void VecAButton() {
+    // Common logic for both Vector A and B button clicks
+    void HandleVectorButton(bool isB, Action clickAction) {
+        // Check if coord system exists
         if (coordSystem == null) {
             if (FindCoordSystem()) {
                 Debug.Log("Coord system not found");
                 return;
             }
         }
+
+        // Conditional execution based on current toggle state
         if (isInputToggled) {
-            if (isArrowB) {
-                AClick();
+            if (isArrowB != isB) {
+                clickAction();
+                ReloadInputs();
             } else {
                 TogglePanel();
             }
         } else {
-            AClick();
+            clickAction();
             TogglePanel();
         }
     }
 
+    // Reload UI Input Fields to the actual arrow position
+    void ReloadInputs() {
+        switch (selectedMenu) {
+            case Mode.CARTESIAN: menus[(int)selectedMenu].GetComponent<CartesianMenu>().SetInputBasedOnArrow(); break;
+            case Mode.POLAR: menus[(int)selectedMenu].GetComponent<PolarMenu>().SetInputBasedOnArrow(); break;
+            default: Debug.Log("No Mode found."); return;
+        }
+    }
+
+    // Logic for Vector A click
     void AClick() {
         isArrowB = false;
-        VectorImage.GetComponent<Image>().color = new Color(0.1215686f, 0.003921569f, 0.3882353f);
-        VectorText.text = "A";
-        if (arrowInstanceA == null) {
-            arrowInstanceA = Instantiate(arrowPrefab, coordSystem);
-            Renderer rend = arrowInstanceA.transform.Find("arrow/3D-Arrow").GetComponent<Renderer>();
-            rend.material = new Material(rend.material) {
-                color = new Color(0.1215686f, 0.003921569f, 0.3882353f)
-            };
-        }
+        SetArrow(ref arrowInstanceA, "A", new Color(0.1215686f, 0.003921569f, 0.3882353f));
     }
 
-    public void VecBButton() {
-        if (coordSystem == null) {
-            if (FindCoordSystem()) {
-                Debug.Log("Coord system not found");
-                return;
-            }
-        }
-        if (isInputToggled) {
-            if (!isArrowB) {
-                BClick();
-            } else {
-                TogglePanel();
-            }
-        } else {
-            BClick();
-            TogglePanel();
-        }
-    }
-
+    // Logic for Vector B click
     void BClick() {
         isArrowB = true;
-        VectorImage.GetComponent<Image>().color = new Color(0.569f, 1.0f, 0.191f);
-        VectorText.text = "B";
-        if (arrowInstanceB == null) {
-            arrowInstanceB = Instantiate(arrowPrefab, coordSystem);
-            Renderer rend = arrowInstanceB.transform.Find("arrow/3D-Arrow").GetComponent<Renderer>();
-            rend.material = new Material(rend.material) {
-                color = new Color(0.569f, 1.0f, 0.191f)
-            };
+        SetArrow(ref arrowInstanceB, "B", new Color(0.569f, 1.0f, 0.191f));
+    }
 
+    // Sets up the arrow instance
+    void SetArrow(ref GameObject arrowInstance, string text, Color color) {
+        // Update UI elements
+        vectorText.text = text;
+        vectorImage.GetComponent<Image>().color = color;
+
+        // Instantiate arrow if it doesn't exist
+        if (arrowInstance == null) {
+            // Your instantiation logic here
+            arrowInstance = Instantiate(arrowPrefab, coordSystem);
+            Renderer rend = arrowInstance.transform.Find("arrow/3D-Arrow").GetComponent<Renderer>();
+            rend.material = new Material(rend.material) {
+                color = color
+            };
         }
     }
 
+    // Toggles input panel
     void TogglePanel() {
         isInputToggled = !isInputToggled;
         if (isInputToggled) {
             ChangeMenu();
         }
         inputPanel.SetActive(isInputToggled);
-        
     }
 
+    // Finds the coordinate system, returns true if not found
     bool FindCoordSystem() {
         coordSystem = GameObject.FindGameObjectWithTag("coord-system").GetComponent<Transform>();
         return coordSystem == null;
     }
 
+    // BUTTONCLICK: Moves to the next menu
     public void NextMenu() {
         selectedMenu = (Mode)(((int)selectedMenu + 1) % totalEnumValues);
         ChangeMenu();
     }
 
+    // BUTTONCLICK: Moves to the previous menu
     public void PrevMenu() {
         selectedMenu = (Mode)(((int)selectedMenu - 1 + totalEnumValues) % totalEnumValues);
         ChangeMenu();
     }
 
-    void DisableAll() {
+    // Disables all menus
+    void DisableAllMenus() {
         foreach (GameObject menu in menus) {
             menu.SetActive(false);
         }
     }
 
+    // Changes to the selected menu
     void ChangeMenu() {
-        DisableAll();
-
+        DisableAllMenus();
         // Enable the selected menu
         menus[(int)selectedMenu].SetActive(true);
         menuText.text = menuNames[(int)selectedMenu];
     }
-
-
 
 }

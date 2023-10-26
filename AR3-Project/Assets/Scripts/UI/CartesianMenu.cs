@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -13,14 +11,15 @@ public class CartesianMenu : MonoBehaviour {
     [SerializeField] private Slider sliderY;
     [SerializeField] private Slider sliderZ;
 
-    //public GameObject arrowPrefab;
-    //private GameObject arrowInstance;
-    //private GameObject coordSystem;
     private GameObject canvas;
 
     private Vector3 vector = Vector3.zero; // The current vector
 
+    // Called when the object becomes active; used for initialization
     private void Start() {
+
+        // Listen for changes in Input Fields and Sliders for each axis
+        // Call the corresponding function when value changes
         inputX.onValueChanged.AddListener(val => OnChangeInputAxis(val, 'x'));
         inputY.onValueChanged.AddListener(val => OnChangeInputAxis(val, 'y'));
         inputZ.onValueChanged.AddListener(val => OnChangeInputAxis(val, 'z'));
@@ -28,21 +27,23 @@ public class CartesianMenu : MonoBehaviour {
         sliderX.onValueChanged.AddListener(val => OnChangeSliderAxis(val, 'x'));
         sliderY.onValueChanged.AddListener(val => OnChangeSliderAxis(val, 'y'));
         sliderZ.onValueChanged.AddListener(val => OnChangeSliderAxis(val, 'z'));
-
-        //coordSystem = GameObject.FindGameObjectWithTag("coord-system");
-        canvas = GameObject.FindGameObjectWithTag("canvas");
-        //arrowInstance = canvas.GetComponent<VectorNav>().getIsArrowB() ? canvas.GetComponent<VectorNav>().getArrowB() : canvas.GetComponent<VectorNav>().getArrowA();
-        Debug.Log("Start");
     }
 
+    // Called when the script is enabled => `SetActive(true)`
     private void OnEnable() {
+        SetInputBasedOnArrow();
+    }
+
+    // Sets input fields to the arrow's position
+    public void SetInputBasedOnArrow() {
+
+        // Initialize canvas if it's null
         if (canvas == null) {
             canvas = GameObject.FindGameObjectWithTag("canvas");
         }
         try {
             Vector3 targetPosition = GetTargetPosition();
 
-            Debug.Log(targetPosition);
             // Updating input fields based on the arrow's current position
             inputX.text = targetPosition.x.ToString("F2");
             inputY.text = targetPosition.y.ToString("F2");
@@ -60,9 +61,10 @@ public class CartesianMenu : MonoBehaviour {
         }
     }
 
-
+    // Called when an Input Field changes its value
     private void OnChangeInputAxis(string value, char axis) {
-        //float floatVal = Mathf.Clamp( ConvertToFloat(value), -5.0f, 5.0f);
+
+        // Convert input to float and update corresponding slider
         float floatVal = ConvertToFloat(value);
         switch (axis) {
             case 'x':
@@ -75,10 +77,14 @@ public class CartesianMenu : MonoBehaviour {
                 sliderZ.value = floatVal;
                 break;
         }
-        OnChange(axis, floatVal);
+
+        UpdateArrow(axis, floatVal);
     }
 
+    // Called when a Slider changes its value
     private void OnChangeSliderAxis(float value, char axis) {
+
+        // Update the corresponding input field
         switch (axis) {
             case 'x':
                 inputX.text = value.ToString("F2");
@@ -90,17 +96,22 @@ public class CartesianMenu : MonoBehaviour {
                 inputZ.text = value.ToString("F2");
                 break;
         }
-        OnChange(axis, value);
+
+        UpdateArrow(axis, value);
     }
 
-    private void OnChange(char axis, float newValue) {
-        GameObject arrowInstance = canvas.GetComponent<VectorNav>().getActualArrow();
+    // Update arrow's position based on new values for x, y or z axis
+    private void UpdateArrow(char axis, float newValue) {
+
+        // Get current arrow instance and check if it's null
+        GameObject arrowInstance = canvas.GetComponent<VectorNav>().GetActualArrow();
         if (arrowInstance == null) {
             Debug.LogError("Arrow instance is not instantiated");
             return;
         }
 
-        // Update the relevant component of the vector
+        // Update the corresponding axis in the internal vector
+        // Call ChangeArrow to reflect these updates on the arrow
         switch (axis) {
             case 'x':
                 vector.x = newValue;
@@ -121,6 +132,8 @@ public class CartesianMenu : MonoBehaviour {
 
     }
 
+    // Utility function to convert string to float
+    // Try parsing the float value; default to 0.0 if unsuccessful
     private float ConvertToFloat(string input) {
         float newValue;
         if (!float.TryParse(input, out newValue)) {
@@ -129,8 +142,9 @@ public class CartesianMenu : MonoBehaviour {
         return newValue;
     }
 
+    // Change the arrow's rotation and scale to point it towards the target position
     void ChangeArrow() {
-        GameObject arrowInstance = canvas.GetComponent<VectorNav>().getActualArrow();
+        GameObject arrowInstance = canvas.GetComponent<VectorNav>().GetActualArrow();
         Vector3 targetPosition = vector;
         Vector3 arrowStartPosition = new Vector3(0, 0, 0);
 
@@ -146,10 +160,11 @@ public class CartesianMenu : MonoBehaviour {
         arrowInstance.transform.localScale = new Vector3(1, 1, distance);
     }
 
+    // Reverse of ChangeArrow(): Calculate the target position based on arrow's rotation and scale
     Vector3 GetTargetPosition() {
-        GameObject arrowInstance = canvas.GetComponent<VectorNav>().getActualArrow();
+        GameObject arrowInstance = canvas.GetComponent<VectorNav>().GetActualArrow();
         Quaternion rotation = arrowInstance.transform.rotation;
-        float distance = arrowInstance.transform.localScale.z;  // Assuming the distance is stored in the z component of localScale
+        float distance = arrowInstance.transform.localScale.z;
 
         // Calculate the direction vector based on rotation
         Vector3 direction = rotation * Vector3.forward;

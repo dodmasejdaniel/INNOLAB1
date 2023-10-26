@@ -2374,8 +2374,8 @@ MonoBehaviour:
   - {fileID: 368972431}
   - {fileID: 1672164359}
   menuText: {fileID: 2065101423}
-  VectorImage: {fileID: 994932037}
-  VectorText: {fileID: 1268504854}
+  vectorImage: {fileID: 994932037}
+  vectorText: {fileID: 1268504854}
 --- !u!1 &388525029
 GameObject:
   m_ObjectHideFlags: 0
@@ -7927,7 +7927,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 375400646}
         m_TargetAssemblyTypeName: VectorNav, Assembly-CSharp
-        m_MethodName: VecAButton
+        m_MethodName: HandleVecAButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9143,7 +9143,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 375400646}
         m_TargetAssemblyTypeName: VectorNav, Assembly-CSharp
-        m_MethodName: VecBButton
+        m_MethodName: HandleVecBButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

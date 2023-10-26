@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -13,14 +11,15 @@ public class PolarMenu : MonoBehaviour {
     [SerializeField] private Slider sliderY;
     [SerializeField] private Slider sliderZ;
 
-    //public GameObject arrowPrefab;
-    //private GameObject arrowInstance;
-    //private GameObject coordSystem;
     private GameObject canvas;
 
     private Vector3 vector = Vector3.zero; // The current vector
 
+    // Called when the object becomes active; used for initialization
     private void Start() {
+
+        // Listen for changes in Input Fields and Sliders for each axis
+        // Call the corresponding function when value changes
         inputX.onValueChanged.AddListener(val => OnChangeInputAxis(val, 'x'));
         inputY.onValueChanged.AddListener(val => OnChangeInputAxis(val, 'y'));
         inputZ.onValueChanged.AddListener(val => OnChangeInputAxis(val, 'z'));
@@ -28,21 +27,22 @@ public class PolarMenu : MonoBehaviour {
         sliderX.onValueChanged.AddListener(val => OnChangeSliderAxis(val, 'x'));
         sliderY.onValueChanged.AddListener(val => OnChangeSliderAxis(val, 'y'));
         sliderZ.onValueChanged.AddListener(val => OnChangeSliderAxis(val, 'z'));
-
-        //coordSystem = GameObject.FindGameObjectWithTag("coord-system");
-        canvas = GameObject.FindGameObjectWithTag("canvas");
-        //arrowInstance = canvas.GetComponent<VectorNav>().getIsArrowB() ? canvas.GetComponent<VectorNav>().getArrowB() : canvas.GetComponent<VectorNav>().getArrowA();
-
     }
 
+    // Called when the script is enabled => `SetActive(true)`
     private void OnEnable() {
+        SetInputBasedOnArrow();
+    }
+
+    // Sets input fields to the arrow's position
+    public void SetInputBasedOnArrow() {
+        // Initialize canvas if it's null
         if (canvas == null) {
             canvas = GameObject.FindGameObjectWithTag("canvas");
         }
         try {
             Vector3 targetPosition = GetTargetPosition();
 
-            Debug.Log(targetPosition);
             // Updating input fields based on the arrow's current position
             inputX.text = targetPosition.x.ToString("F2");
             inputY.text = targetPosition.y.ToString("F2");
@@ -60,8 +60,10 @@ public class PolarMenu : MonoBehaviour {
         }
     }
 
+    // Called when an Input Field changes its value
     private void OnChangeInputAxis(string value, char axis) {
-        //float floatVal = Mathf.Clamp( ConvertToFloat(value), -5.0f, 5.0f);
+
+        // Convert input to float and update corresponding slider
         float floatVal = ConvertToFloat(value);
         switch (axis) {
             case 'x':
@@ -74,10 +76,14 @@ public class PolarMenu : MonoBehaviour {
                 sliderZ.value = floatVal;
                 break;
         }
-        OnChange(axis, floatVal);
+
+        UpdateArrow(axis, floatVal);
     }
 
+    // Called when a Slider changes its value
     private void OnChangeSliderAxis(float value, char axis) {
+
+        // Update the corresponding input field
         switch (axis) {
             case 'x':
                 inputX.text = value.ToString("F2");
@@ -89,17 +95,22 @@ public class PolarMenu : MonoBehaviour {
                 inputZ.text = value.ToString("F2");
                 break;
         }
-        OnChange(axis, value);
+
+        UpdateArrow(axis, value);
     }
 
-    private void OnChange(char axis, float newValue) {
-        GameObject arrowInstance = canvas.GetComponent<VectorNav>().getActualArrow();
+    // Update arrow's position based on new values for x, y or z axis
+    private void UpdateArrow(char axis, float newValue) {
+
+        // Get current arrow instance and check if it's null
+        GameObject arrowInstance = canvas.GetComponent<VectorNav>().GetActualArrow();
         if (arrowInstance == null) {
             Debug.LogError("Arrow instance is not instantiated");
             return;
         }
 
-        // Update the relevant component of the vector
+        // Update the corresponding axis in the internal vector
+        // Call ChangeArrow to reflect these updates on the arrow
         switch (axis) {
             case 'x':
                 vector.x = newValue;
@@ -120,6 +131,8 @@ public class PolarMenu : MonoBehaviour {
 
     }
 
+    // Utility function to convert string to float
+    // Try parsing the float value; default to 0.0 if unsuccessful
     private float ConvertToFloat(string input) {
         float newValue;
         if (!float.TryParse(input, out newValue)) {
@@ -128,8 +141,9 @@ public class PolarMenu : MonoBehaviour {
         return newValue;
     }
 
+    // Update the arrow's rotation and scale based on the current vector
     void ChangeArrow() {
-        GameObject arrowInstance = canvas.GetComponent<VectorNav>().getActualArrow();
+        GameObject arrowInstance = canvas.GetComponent<VectorNav>().GetActualArrow();
 
         // Convert spherical (r, theta, phi) to Cartesian (x, y, z)
         float r = vector.x;  // Radius
@@ -153,8 +167,9 @@ public class PolarMenu : MonoBehaviour {
         arrowInstance.transform.localScale = new Vector3(1, 1, r);
     }
 
+    // Reverse of ChangeArrow(): Calculate the target position based on arrow's rotation and scale
     Vector3 GetTargetPosition() {
-        GameObject arrowInstance = canvas.GetComponent<VectorNav>().getActualArrow();
+        GameObject arrowInstance = canvas.GetComponent<VectorNav>().GetActualArrow();
 
         // Get r from local scale
         float r = arrowInstance.transform.localScale.z;
@@ -163,7 +178,7 @@ public class PolarMenu : MonoBehaviour {
         Vector3 direction = arrowInstance.transform.rotation * Vector3.forward;
 
         // Correct for the -90 degree rotation on the x-axis
-        Quaternion xInverseRotation = Quaternion.Euler(90, 0, 0);
+        Quaternion xInverseRotation =  Quaternion.Euler(90, 0, 0);
         direction = xInverseRotation * direction;
 
         // Convert to spherical coordinates
@@ -176,6 +191,4 @@ public class PolarMenu : MonoBehaviour {
 
         return new Vector3(r, phi, theta);
     }
-
-
 }
