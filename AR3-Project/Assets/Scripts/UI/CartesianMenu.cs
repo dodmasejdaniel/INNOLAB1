@@ -15,6 +15,8 @@ public class CartesianMenu : MonoBehaviour {
 
     private Vector3 vector = Vector3.zero; // The current vector
 
+    private DotCrossProductEvent eventScript;
+
     // Called when the object becomes active; used for initialization
     private void Start() {
 
@@ -27,6 +29,8 @@ public class CartesianMenu : MonoBehaviour {
         sliderX.onValueChanged.AddListener(val => OnChangeSliderAxis(val, 'x'));
         sliderY.onValueChanged.AddListener(val => OnChangeSliderAxis(val, 'y'));
         sliderZ.onValueChanged.AddListener(val => OnChangeSliderAxis(val, 'z'));
+
+        eventScript = FindObjectOfType<DotCrossProductEvent>();
     }
 
     // Called when the script is enabled => `SetActive(true)`
@@ -129,7 +133,13 @@ public class CartesianMenu : MonoBehaviour {
                 Debug.LogError("Invalid axis: " + axis);
                 return;
         }
+       
+    }
 
+    public void UpdateDotCrossProduct() {
+        if (eventScript != null) {
+            eventScript.TriggerEvent(vector, canvas.GetComponent<VectorNav>().GetIsArrowB());
+        }
     }
 
     // Utility function to convert string to float
@@ -144,6 +154,8 @@ public class CartesianMenu : MonoBehaviour {
 
     // Change the arrow's rotation and scale to point it towards the target position
     void ChangeArrow() {
+        UpdateDotCrossProduct();
+
         GameObject arrowInstance = canvas.GetComponent<VectorNav>().GetActualArrow();
         Vector3 targetPosition = vector;
         Vector3 arrowStartPosition = new Vector3(0, 0, 0);

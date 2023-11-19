@@ -15,6 +15,8 @@ public class PolarMenu : MonoBehaviour {
 
     private Vector3 vector = Vector3.zero; // The current vector
 
+    private DotCrossProductEvent eventScript;
+
     // Called when the object becomes active; used for initialization
     private void Start() {
 
@@ -27,6 +29,8 @@ public class PolarMenu : MonoBehaviour {
         sliderX.onValueChanged.AddListener(val => OnChangeSliderAxis(val, 'x'));
         sliderY.onValueChanged.AddListener(val => OnChangeSliderAxis(val, 'y'));
         sliderZ.onValueChanged.AddListener(val => OnChangeSliderAxis(val, 'z'));
+
+        eventScript = FindObjectOfType<DotCrossProductEvent>();
     }
 
     // Called when the script is enabled => `SetActive(true)`
@@ -131,6 +135,12 @@ public class PolarMenu : MonoBehaviour {
 
     }
 
+    public void UpdateDotCrossProduct() {
+        if (eventScript != null) {
+            eventScript.TriggerEvent(PolarToCartesian(vector.x, vector.y, vector.z), canvas.GetComponent<VectorNav>().GetIsArrowB());
+        }
+    }
+
     // Utility function to convert string to float
     // Try parsing the float value; default to 0.0 if unsuccessful
     private float ConvertToFloat(string input) {
@@ -143,6 +153,8 @@ public class PolarMenu : MonoBehaviour {
 
     // Update the arrow's rotation and scale based on the current vector
     void ChangeArrow() {
+        UpdateDotCrossProduct();
+
         GameObject arrowInstance = canvas.GetComponent<VectorNav>().GetActualArrow();
 
         // Convert spherical (r, theta, phi) to Cartesian (x, y, z)
@@ -189,6 +201,18 @@ public class PolarMenu : MonoBehaviour {
         phi = Mathf.Rad2Deg * phi;
         theta = Mathf.Rad2Deg * theta;
 
-        return new Vector3(r, phi, theta);
+        return new Vector3(r, phi % 360, (theta + 360) % 360);
+    }
+
+    public Vector3 PolarToCartesian(float radius, float theta, float phi) {
+        // Theta und Phi sind in Grad, also Umwandlung in Radiant
+        float thetaRad = Mathf.Deg2Rad * theta;
+        float phiRad = Mathf.Deg2Rad * phi;
+
+        float x = radius * Mathf.Sin(phiRad) * Mathf.Cos(thetaRad);
+        float y = radius * Mathf.Sin(phiRad) * Mathf.Sin(thetaRad);
+        float z = radius * Mathf.Cos(phiRad);
+        Debug.Log(x + " " + y + " " + z);
+        return new Vector3(x, y, z);
     }
 }

@@ -138,6 +138,10 @@ public class VectorNav : MonoBehaviour
         ChangeMenu();
     }
 
+    public void DotProductButton() {
+
+    }
+
     // Disables all menus
     void DisableAllMenus() {
         foreach (GameObject menu in menus) {
