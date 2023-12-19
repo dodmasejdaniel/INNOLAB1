@@ -36,6 +36,7 @@ public class CartesianMenu : MonoBehaviour {
     // Called when the script is enabled => `SetActive(true)`
     private void OnEnable() {
         SetInputBasedOnArrow();
+        UpdateDotCrossProduct();
     }
 
     // Sets input fields to the arrow's position

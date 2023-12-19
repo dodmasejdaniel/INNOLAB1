@@ -134,7 +134,6 @@ public class VectorNav : MonoBehaviour
         } else {
             productDisplay.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 413);
         }
-        Debug.Log(productDisplay.GetComponent<RectTransform>().anchoredPosition.y + " pos"); // 413, 1228
         inputPanel.SetActive(isInputToggled);
         
     }
@@ -183,7 +182,6 @@ public class VectorNav : MonoBehaviour
     // Changes to the selected product
     void ChangeProduct(Product newProduct) {
         if (arrowInstanceA == null || arrowInstanceB == null) {
-            Debug.Log("no A or B");
             infoBackground.SetActive(true);
             infoBackground.GetComponentInChildren<TMP_Text>().text = "Platziere zuerst 2 Vektoren.";
             return;

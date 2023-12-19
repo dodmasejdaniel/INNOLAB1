@@ -31,6 +31,7 @@ public class PolarMenu : MonoBehaviour {
         sliderZ.onValueChanged.AddListener(val => OnChangeSliderAxis(val, 'z'));
 
         eventScript = FindObjectOfType<DotCrossProductEvent>();
+        UpdateDotCrossProduct();
     }
 
     // Called when the script is enabled => `SetActive(true)`
