@@ -137,7 +137,7 @@ public class PolarMenu : MonoBehaviour {
 
     public void UpdateDotCrossProduct() {
         if (eventScript != null) {
-            eventScript.TriggerEvent(PolarToCartesian(vector.x, vector.y, vector.z), canvas.GetComponent<VectorNav>().GetIsArrowB());
+            eventScript.TriggerEvent(PolarToCartesian(vector.x, vector.y, vector.z), canvas.GetComponent<VectorNav>().GetIsArrowB(), canvas.GetComponent<VectorNav>().GetIsPolar());
         }
     }
 

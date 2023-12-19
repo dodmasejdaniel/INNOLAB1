@@ -28,6 +28,8 @@ public class AnchorCreator : MonoBehaviour
         set => m_AnchorPrefab = value;
     }
 
+    public GameObject infoPanel;
+
     // Removes all the anchors that have been created.
     public void RemoveAllAnchors()
     {
@@ -82,6 +84,7 @@ public class AnchorCreator : MonoBehaviour
             anchorInstance = Instantiate(m_AnchorPrefab, anchor.transform.position, Quaternion.identity, anchor.transform);
             anchorInstance.transform.localScale *= 5.0f;
 
+            infoPanel.SetActive(false);
             if (anchor == null)
             {
                 Debug.Log("Error creating anchor.");

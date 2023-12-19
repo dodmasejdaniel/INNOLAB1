@@ -138,7 +138,7 @@ public class CartesianMenu : MonoBehaviour {
 
     public void UpdateDotCrossProduct() {
         if (eventScript != null) {
-            eventScript.TriggerEvent(vector, canvas.GetComponent<VectorNav>().GetIsArrowB());
+            eventScript.TriggerEvent(vector, canvas.GetComponent<VectorNav>().GetIsArrowB(), canvas.GetComponent<VectorNav>().GetIsPolar());
         }
     }
 

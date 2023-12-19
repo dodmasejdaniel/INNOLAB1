@@ -10,6 +10,12 @@ enum Mode {
     POLAR
 }
 
+enum Product {
+    DOT,
+    CROSS,
+    NONE
+}
+
 
 
 public class VectorNav : MonoBehaviour
@@ -20,12 +26,19 @@ public class VectorNav : MonoBehaviour
     private Transform coordSystem;
 
     public GameObject inputPanel;
+    public GameObject infoBackground;
     public GameObject[] menus;
+    public GameObject productDisplay;
 
     public TMP_Text menuText;
 
     private Mode selectedMenu = Mode.POLAR;
-    private readonly String[] menuNames = { "Kartesisch", "Polar" };
+    private readonly String[] menuNames = { "Kartesisch", "Polar", "" };
+    private Product selectedProduct = Product.NONE;
+    private readonly String[] products = { "Skalar", "Kreuz", "" };
+
+    public TMP_Text productTypeText;
+    public TMP_Text productResultText;
 
     public GameObject vectorImage;
     public TMP_Text vectorText;
@@ -34,6 +47,7 @@ public class VectorNav : MonoBehaviour
     private bool isArrowB = false;
 
     public bool GetIsArrowB() => isArrowB;
+    public bool GetIsPolar() => selectedMenu == Mode.POLAR;
 
     public GameObject GetActualArrow() => isArrowB ? arrowInstanceB : arrowInstanceA;
 
@@ -116,8 +130,13 @@ public class VectorNav : MonoBehaviour
         isInputToggled = !isInputToggled;
         if (isInputToggled) {
             ChangeMenu();
+            productDisplay.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 1228);
+        } else {
+            productDisplay.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 413);
         }
+        Debug.Log(productDisplay.GetComponent<RectTransform>().anchoredPosition.y + " pos"); // 413, 1228
         inputPanel.SetActive(isInputToggled);
+        
     }
 
     // Finds the coordinate system, returns true if not found
@@ -139,7 +158,11 @@ public class VectorNav : MonoBehaviour
     }
 
     public void DotProductButton() {
+        ChangeProduct(Product.DOT);
+    }
 
+    public void CrossProductButton() {
+        ChangeProduct(Product.CROSS);
     }
 
     // Disables all menus
@@ -155,6 +178,30 @@ public class VectorNav : MonoBehaviour
         // Enable the selected menu
         menus[(int)selectedMenu].SetActive(true);
         menuText.text = menuNames[(int)selectedMenu];
+    }
+
+    // Changes to the selected product
+    void ChangeProduct(Product newProduct) {
+        if (arrowInstanceA == null || arrowInstanceB == null) {
+            Debug.Log("no A or B");
+            infoBackground.SetActive(true);
+            infoBackground.GetComponentInChildren<TMP_Text>().text = "Platziere zuerst 2 Vektoren.";
+            return;
+        } else {
+            infoBackground.SetActive(false);
+        }
+
+        if (selectedProduct == newProduct) {
+            productDisplay.SetActive(false);
+            selectedProduct = Product.NONE;
+            return;
+        }
+        selectedProduct = newProduct;
+        gameObject.GetComponent<DotCrossProductCalculator>().SetDotCrossProduct((int)selectedProduct);
+        productTypeText.text = products[(int)selectedProduct] + "produkt:";
+        Debug.Log(selectedProduct);
+        Debug.Log(products[(int)selectedProduct]);
+        productDisplay.SetActive(true);
     }
 
 }
