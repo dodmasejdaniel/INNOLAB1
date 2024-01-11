@@ -53,9 +53,9 @@ public class DotCrossProductCalculator : MonoBehaviour {
         }
 
         // Debug logs for the results
-        Debug.Log("VecA: " + vecA + " | VecB: " + vecB);
-        Debug.Log("Dot Product: " + dotProduct.ToString("F2"));
-        Debug.Log("Cross Product: " + crossProduct.ToString("F1"));
+        // Debug.Log("VecA: " + vecA + " | VecB: " + vecB);
+        // Debug.Log("Dot Product: " + dotProduct.ToString("F2"));
+        // Debug.Log("Cross Product: " + crossProduct.ToString("F1"));
     }
 
     // Public method to set whether to display the dot or cross product.

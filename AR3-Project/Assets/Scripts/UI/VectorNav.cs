@@ -16,8 +16,6 @@ enum Product {
     NONE
 }
 
-
-
 public class VectorNav : MonoBehaviour
 {
     public GameObject arrowPrefab;
@@ -156,10 +154,12 @@ public class VectorNav : MonoBehaviour
         ChangeMenu();
     }
 
+    // BUTTONCLICK: Change to DOT-Product
     public void DotProductButton() {
         ChangeProduct(Product.DOT);
     }
 
+    // BUTTONCLICK: Change to CROSS-Product
     public void CrossProductButton() {
         ChangeProduct(Product.CROSS);
     }
@@ -181,6 +181,8 @@ public class VectorNav : MonoBehaviour
 
     // Changes to the selected product
     void ChangeProduct(Product newProduct) {
+
+        // Stop, if the vectors are not set.
         if (arrowInstanceA == null || arrowInstanceB == null) {
             infoBackground.SetActive(true);
             infoBackground.GetComponentInChildren<TMP_Text>().text = "Platziere zuerst 2 Vektoren.";
@@ -189,6 +191,7 @@ public class VectorNav : MonoBehaviour
             infoBackground.SetActive(false);
         }
 
+        // Doube-click disables the menu and returns (the new product is only the same, if the user clicked on the same product-button)
         if (selectedProduct == newProduct) {
             productDisplay.SetActive(false);
             selectedProduct = Product.NONE;
@@ -197,8 +200,6 @@ public class VectorNav : MonoBehaviour
         selectedProduct = newProduct;
         gameObject.GetComponent<DotCrossProductCalculator>().SetDotCrossProduct((int)selectedProduct);
         productTypeText.text = products[(int)selectedProduct] + "produkt:";
-        Debug.Log(selectedProduct);
-        Debug.Log(products[(int)selectedProduct]);
         productDisplay.SetActive(true);
     }
 

@@ -4,8 +4,6 @@ using TMPro;
 public class CustomVectorFieldAndParticleFunction : MonoBehaviour {
     public static CustomVectorFieldAndParticleFunction Instance;
 
-    //public VectorFieldVisualizer vectorFieldVisualizer;
-    //public ParticleFieldController particleFieldController;
     private TMP_Dropdown functionDropdown;
 
     private enum FunctionType {
@@ -29,10 +27,12 @@ public class CustomVectorFieldAndParticleFunction : MonoBehaviour {
 
         functionDropdown = GameObject.FindGameObjectWithTag("dropdown").GetComponent<TMP_Dropdown>();
 
+        // Set Listener to dropdown changes
         functionDropdown.onValueChanged.AddListener(delegate { DropdownValueChanged(functionDropdown); });
         DropdownValueChanged(functionDropdown);
     }
 
+    // Dropdown changes the used vector-field function
     private void DropdownValueChanged(TMP_Dropdown change) {
         FunctionType functionType = (FunctionType)change.value;
 
@@ -58,15 +58,9 @@ public class CustomVectorFieldAndParticleFunction : MonoBehaviour {
         if (visualizer != null) {
             visualizer.GetComponent<VectorFieldVisualizer>().ResetVectorField(currentFunction);
         }
-
-        // Check if the vectorFieldVisualizer and particleFieldController exist and set their function
-        //if (vectorFieldVisualizer)
-        //    vectorFieldVisualizer.SetCustomVectorFieldFunction(currentFunction);
-        //if (particleFieldController)
-        //    particleFieldController.SetCustomVectorFieldFunction(currentFunction);
     }
 
-
+    // Basic 3x cos
     private Vector3 MyCustomFunction(Vector3 position) {
         
         return new Vector3(
@@ -76,6 +70,7 @@ public class CustomVectorFieldAndParticleFunction : MonoBehaviour {
         );
     }
 
+    // Spinnin'
     private Vector3 CircularVectorField(Vector3 position) {
 
         return new Vector3(
@@ -85,6 +80,7 @@ public class CustomVectorFieldAndParticleFunction : MonoBehaviour {
         ).normalized;
     }
 
+    // Curl Noise 
     private Vector3 CurlNoiseVectorField(Vector3 position) {
 
         float noiseX = (Mathf.PerlinNoise(position.y, position.z) - 0.5f) * 2f;
@@ -94,6 +90,7 @@ public class CustomVectorFieldAndParticleFunction : MonoBehaviour {
         return new Vector3(noiseX, noiseY, noiseZ).normalized;
     }
 
+    // Spherical harmonics
     private Vector3 SphericalHarmonicsVectorField(Vector3 position) {
 
         float r = position.magnitude;
@@ -108,6 +105,7 @@ public class CustomVectorFieldAndParticleFunction : MonoBehaviour {
         return new Vector3(Y10, Y11, Y1_1).normalized;
     }
 
+    // Torodial Vector
     private Vector3 TorodialVectorVectorField(Vector3 position) {
         return new Vector3(
             -position.z * (1f + position.magnitude),

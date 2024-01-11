@@ -15,21 +15,26 @@ public class ParticleFieldController : MonoBehaviour {
         OnCustomParticleFieldFunction = function;
     }
 
-    private void Start() {
-        if (CustomVectorFieldAndParticleFunction.Instance != null)
-            OnCustomParticleFieldFunction = CustomVectorFieldAndParticleFunction.Instance.currentFunction;
-    }
-
-    private void Update() {
-        if (CustomVectorFieldAndParticleFunction.Instance != null)
-            OnCustomParticleFieldFunction = CustomVectorFieldAndParticleFunction.Instance.currentFunction;
-    }
-
+    // Awake, Start, Update, LateUpdate: https://docs.unity3d.com/Manual/ExecutionOrder.html
+    // Get and set particle system (flying/moving dots)
     private void Awake() {
         particleSystemV = gameObject.GetComponent<ParticleSystem>();
         particles = new ParticleSystem.Particle[particleSystemV.main.maxParticles];
     }
 
+    // Set vector-field function (3x cos,..)
+    private void Start() {
+        if (CustomVectorFieldAndParticleFunction.Instance != null)
+            OnCustomParticleFieldFunction = CustomVectorFieldAndParticleFunction.Instance.currentFunction;
+    }
+
+    // Set vector-field function (3x cos,..) in each frame
+    private void Update() {
+        if (CustomVectorFieldAndParticleFunction.Instance != null)
+            OnCustomParticleFieldFunction = CustomVectorFieldAndParticleFunction.Instance.currentFunction;
+    }
+
+    // Update position of particles, depending on the custom vector-field function
     private void LateUpdate() {
         //InitializeIfNeeded();
 
@@ -45,6 +50,7 @@ public class ParticleFieldController : MonoBehaviour {
         particleSystemV.SetParticles(particles, numParticlesAlive);
     }
 
+    // Wrapper around the custom function for safety reasons (if no vector-field function was found)
     private Vector3 VectorFieldFunction(Vector3 position) {
         if (OnCustomParticleFieldFunction != null) {
             return OnCustomParticleFieldFunction(position);
@@ -59,11 +65,8 @@ public class ParticleFieldController : MonoBehaviour {
     }
 
     public void RestartParticleSystem() {
-        //if (particleSystemV != null) {
-            particleSystemV.Clear();
-            particleSystemV.Play();
-        //}
-        
+        particleSystemV.Clear();
+        particleSystemV.Play(); 
     }
 
     //private void InitializeIfNeeded() {
